@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>I lost my pet!</title>
+    <script type="text/javascript" src="client.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">I lost my pet!</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="index.html">Map</a></li>
+                <li><a href="#">List</a></li>
+                <li><a href="#">I found a pet!</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#" id="sign-up-link" data-toggle="modal" data-target="#modal-sign-up"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a href="#" id="login-link" data-toggle="modal" data-target="#modal-login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                <li style="display: none;" id="greeting"><a href="#"><span id="user-icon" class="glyphicon glyphicon-user"></span> <span id="user-name"> </span></a></li>
+            </ul>
+            </div>
+        </nav>
+
+        <div id="modal-sign-up" class="modal fade modal-dialog modal-dialog-centered" role="dialog">
+            <div class="modal-content" id="sign-up-m-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Sign up!</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group align-items-center">
+                        <label for="email">E-mail</label><br/>
+                        <input id="SUemail" type="email" name="email"/><br/><br/>
+
+                        <label for="full-name">Full name</label><br/>
+                        <input id="SUfull-name" type="text" name="full-name"/><br/><br/>
+
+                        <label for="password">Passowrd</label><br/>
+                        <input id="SUpassword" type="password" name="password"/><br/><br/>
+
+                        <label for="phone-num">Phone number</label><br/>
+                        <input id="SUphone-num" type="text" name="phone-num"/><br/><br/>
+
+                        <button class="btn" id="sign-up">Register now!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="modal-login" class="modal fade modal-dialog modal-dialog-centered" role="dialog">
+            <div class="modal-content" id="login-m-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Login!</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group align-items-center">
+                        <label for="email">E-mail</label><br/>
+                        <input id="LIemail" type="email" name="email"/><br/><br/>
+
+                        <label for="password">Passowrd</label><br/>
+                        <input id="LIpassword" type="password" name="password"/><br/><br/>
+
+                        <button class="btn" id="login">Login now!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
