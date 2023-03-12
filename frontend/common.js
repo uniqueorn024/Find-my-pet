@@ -1,26 +1,27 @@
-
 async function auth(){
-  const resp = await fetch('/auth_user', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
+    const resp = await fetch('/auth_user', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await resp.json();
+    console.log("resp: ", data);
+  
+    if(data.status == "OK"){
+      document.getElementById("sign-up-link").style.display = "none";
+      document.getElementById("login-link").style.display = "none";
+      document.getElementById("greeting").style.display = "block";
+      document.getElementById("user-name").innerText = data.user;
+      document.getElementById("addAnnousment").style.display = "block";
+    }else{
+      console.log(data.message);
     }
-  });
-  const data = await resp.json();
-  console.log("resp: ", data);
-
-  if(data.status == "OK"){
-    document.getElementById("sign-up-link").style.display = "none";
-    document.getElementById("login-link").style.display = "none";
-    document.getElementById("greeting").style.display = "block";
-    document.getElementById("user-name").innerText = data.user;
-  }else{
-    console.log(data.message);
   }
-}
+
 window.addEventListener("load", (event) => {
-    
-    console.log("loaded");
+    event.preventDefault();
+    //console.log("loaded");
     auth();
 
     const signupBtn = document.getElementById('sign-up');
