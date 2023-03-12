@@ -1,6 +1,27 @@
+
+async function auth(){
+  const resp = await fetch('/auth_user', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  const data = await resp.json();
+  console.log("resp: ", data);
+
+  if(data.status == "OK"){
+    document.getElementById("sign-up-link").style.display = "none";
+    document.getElementById("login-link").style.display = "none";
+    document.getElementById("greeting").style.display = "block";
+    document.getElementById("user-name").innerText = data.user;
+  }else{
+    console.log(data.message);
+  }
+}
 window.addEventListener("load", (event) => {
     
     console.log("loaded");
+    auth();
 
     const signupBtn = document.getElementById('sign-up');
     const loginBtn = document.getElementById('login');
@@ -32,6 +53,9 @@ window.addEventListener("load", (event) => {
       });
       const data = await resp.json();
       console.log("resp: ", data);
+      if(data.status == "OK"){
+        auth();
+      }
       
     });
 
@@ -60,11 +84,7 @@ window.addEventListener("load", (event) => {
       const data = await resp.json();
       console.log("resp: ", data);
       if(data.status == "OK"){
-        console.log("hiding");
-        document.getElementById("sign-up-link").style.display = "none";
-        document.getElementById("login-link").style.display = "none";
-        document.getElementById("greeting").style.display = "block";
-        document.getElementById("user-name").innerText = data.user;
+        auth();
       }
     });
 

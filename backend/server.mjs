@@ -2,6 +2,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { db } from './connect.mjs';
 import { hash, compare } from 'bcrypt';
+import cookieParser from 'cookie-parser';
+import {randomBytes} from 'crypto';
 
 const port = process.env.PORT ?? 8000;
 const saltRounds = 10;
@@ -9,24 +11,35 @@ const saltRounds = 10;
 const app = express();
 
 app.use(express.static('../frontend/'));
+app.use(cookieParser());
 
 app.use(bodyParser.json())
 
-function getUser(req, res, next) {
-  console.log('asd');
-  // db.get();
-  // req.user = await db.get();
-  req.user = 3;
+function setCookie(req, res, next) {
+  console.log("asdfs");
+  if (!req.cookies['sid']){
+    res.cookie('sid', randomBytes(64).toString('hex'));
+  }
   next();
 }
-app.use(getUser);
+app.use(setCookie);
 
-
-app.get('/', (req, res) => {
-  res.sendFile('../frontend/index.html');
+app.get('/auth_user', async (req, res) => {
+  let sql = 'SELECT uid, users.fullname FROM cookies JOIN users ON users.user_id = uid WHERE cookie = ?';
+  let row = await db.get(sql, [req.cookies["sid"]]);
+  if(!row) {
+      return res.json({
+        status: "error",
+        message: "Not logged in!",
+      });
+  }
+  res.json({
+    status: "OK",
+    user: row.fullname
+  });
 });
 
-{ '/', [express.static, bodyParser, getUser, ]}
+// { '/', [express.static, bodyParser, getUser, ]}
 
   //Database.openSync('test.db') //
   
@@ -44,14 +57,8 @@ app.get('/', (req, res) => {
 app.post('/register', async (req, res) => {
   let data = req.body;
 
-  // if(!req.user) {
-  //   ....
-  // } else {
-  //   req.user.email
-  // }
-
-
-  await db.run('INSERT INTO users (fullname, email, password, phone_number) VALUES (?, ?, ?, ?)', [
+  let sql = 'INSERT INTO users (fullname, email, password, phone_number) VALUES (?, ?, ?, ?)';
+  let row = await db.run(sql, [
     data.full_name,
     data.email,
     await hash(data.password, saltRounds),
@@ -59,13 +66,29 @@ app.post('/register', async (req, res) => {
   ]);
 
   console.log('User inserted successfully.');
-  res.json({ status: 'OK' });
+
+  if(!row) {
+      return res.json({
+        status: "error",
+        message: "Name not found!",
+      });
+  }
+
+  await db.run('INSERT INTO cookies (uid, cookie) VALUES (?, ?)', [
+    row.lastID,
+    req.cookies['sid']
+  ]);
+
+  res.json({ 
+    status: 'OK', 
+    name: data.full_name
+    });
 });
 
 
 app.post('/login', async (req, res) => {
   let data = req.body;
-  let sql = 'SELECT fullname, password FROM users WHERE email = ?';
+  let sql = 'SELECT fullname, password, user_id FROM users WHERE email = ?';
   let row = await db.get(sql, [data.email]);
 
   if(!row) {
@@ -81,7 +104,10 @@ app.post('/login', async (req, res) => {
       message: "Wrong password",
     });
   }
-  
+  await db.run('INSERT INTO cookies (uid, cookie) VALUES (?, ?)', [
+    row.user_id,
+    req.cookies['sid']
+  ]);
   res.json({
     status: "OK",
     user: row.fullname,
