@@ -4,8 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>I lost my pet!</title>
-    <script type="text/javascript" src="client_list.js"></script>
     <script type="text/javascript" src="common.js"></script>
+    <script type="text/javascript" src="client_post.js"></script>
+    
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -78,11 +79,11 @@
             </div>
         </div>
     
-        <button class="btn" id="addAnnousment" data-toggle="modal" data-target="#modal-add-annousment" style="display: none;">
+        <button class="btn" style="display:none" id="addAnnousment" data-toggle="modal" data-target="#modal-add-annousment">
             Add announcement
         </button>
 
-        <div id="modal-add-annousment" class="modal fade modal-dialog modal-dialog-centered" role="dialog">
+        <div id="modal-add-annousment" style="display:hidden" class="modal fade modal-dialog modal-dialog-centered" role="dialog">
             <div class="modal-content" id="add-annousment-m-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -114,23 +115,14 @@
             </div>
         </div>
 
-        <table  id="post-list">
-            <tr>
-                <td>
-                    <b>Posts</b>
-                </td>
-                <td>
-                    <b>Date</b>
-                </td>
-            </tr>
-
-        </table>
-
-
-
-
-
-
+        <ul>
+            <li id="name"></li>
+            <li id="description"></li>
+            <li id="status"></li>
+            <li id="age"></li>
+            <li id="phone_num"></li>
+            <li id="notes"></li>
+        </ul>
 
 
     </div>

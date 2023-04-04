@@ -7,23 +7,25 @@ async function auth(){
     });
     const data = await resp.json();
     console.log("resp: ", data);
-  
     if(data.status == "OK"){
       document.getElementById("sign-up-link").style.display = "none";
       document.getElementById("login-link").style.display = "none";
       document.getElementById("greeting").style.display = "block";
       document.getElementById("user-name").innerText = data.user;
-      document.getElementById("addAnnousment").style.display = "block";
+      if(window.location.pathname != "/post.html"){
+        document.getElementById("addAnnousment").style.display = "block";
+      }
+      
     }else{
       console.log(data.message);
-    }
+ 
+    } 
   }
 
 window.addEventListener("load", (event) => {
     event.preventDefault();
     //console.log("loaded");
     auth();
-
     const signupBtn = document.getElementById('sign-up');
     const loginBtn = document.getElementById('login');
     signupBtn.addEventListener('click', async function (){
@@ -67,7 +69,6 @@ window.addEventListener("load", (event) => {
         email: document.getElementById('LIemail').value,
         password: document.getElementById('LIpassword').value,
       }
-      
       //TODO: validate data before sending to server
 
       document.getElementById('LIemail').value = "";

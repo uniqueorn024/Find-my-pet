@@ -14,17 +14,20 @@ app.use(express.static('../frontend/'));
 app.use(cookieParser());
 
 app.use(bodyParser.json())
+app.use(cookieParser())
 
 function setCookie(req, res, next) {
-  console.log("asdfs");
+  //console.log("neshosi");
   if (!req.cookies['sid']){
     res.cookie('sid', randomBytes(64).toString('hex'));
-  }
+    }
   next();
+  //return randomString
 }
 app.use(setCookie);
 
 app.get('/auth_user', async (req, res) => {
+  console.log(req.cookies["sid"]);
   let sql = 'SELECT uid, users.fullname FROM cookies JOIN users ON users.user_id = uid WHERE cookie = ?';
   let row = await db.get(sql, [req.cookies["sid"]]);
   if(!row) {
@@ -35,10 +38,43 @@ app.get('/auth_user', async (req, res) => {
   }
   res.json({
     status: "OK",
-    user: row.fullname
+    user: row.fullname,
+    user_id: row.uid
   });
 });
 
+app.get('/get_all_posts', async (req, res) => {
+  
+  let sql = 'SELECT * FROM pets_data';
+  let data = await db.all(sql);
+  if(!data) {
+      return res.json({
+        status: "error",
+        message: "No posts",
+      });
+  }
+  res.json({
+    status: "OK",
+    posts: data
+  });
+});
+
+app.post('/get_post', async (req, res) => {
+  let data = req.body;
+  console.log(data.id)
+  let sql = 'SELECT * FROM pets_data WHERE id = ?';
+  let row_data = await db.get(sql, [data.id]);
+  if(!row_data) {
+      return res.json({
+        status: "error",
+        message: "No such post",
+      });
+  }
+  res.json({
+    status: "OK",
+    post: row_data
+  });
+});
 // { '/', [express.static, bodyParser, getUser, ]}
 
   //Database.openSync('test.db') //
@@ -113,6 +149,30 @@ app.post('/login', async (req, res) => {
     user: row.fullname,
   });
 });
+
+
+app.post('/addPost',async (req, res) => {
+  let data = req.body;
+  let insert = await db.run('INSERT INTO pets_data (status, author_id, pet_name, description, age, phone_num, notes, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [
+    data.status,
+    data.uid,
+    data.name,
+    data.description,
+    data.age,
+    data.phone_num,
+    data.notes,
+    data.date
+  ]);
+  res.json({
+    status: "OK",
+    post_id: insert.lastID
+  });
+
+
+
+
+});
+
 
 // function handleErrors(err, req, res, next) {
 //   console.log('Im here', err);
